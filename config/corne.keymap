@@ -11,14 +11,7 @@
 #include <dt-bindings/zmk/keys.h>
 
 / {
-    combos {
-        compatible = "zmk,combos";
-
-        shift_del_is_backspace {
-            bindings = <&kp BACKSPACE>;
-            key-positions = <24 11>;
-        };
-    };
+    combos { compatible = "zmk,combos"; };
 
     keymap {
         compatible = "zmk,keymap";
