@@ -5,7 +5,3 @@ Based on [markstos's layout](https://mark.stosberg.com/markstos-corne-3x5-1-keyb
 - added bluetooth control keys in function layer
 - added printscreen key
 - removed 3x click mod to lock (I don't know how to implement it, if you can, please do)
-
-I flash it with nix, by running `nix run .#flash`
-
-![Keymap preview](/keymap.svg)
