@@ -20,8 +20,17 @@
             bindings = <
 &kp TAB    &kp Q  &kp W  &kp E      &kp R               &kp T        &kp Y            &kp U      &kp I            &kp O    &kp P             &kp DELETE
 &sk LALT   &kp A  &kp S  &kp D      &kp F               &kp G        &kp H            &kp J      &kp K            &kp L    &kp SINGLE_QUOTE  &sk RIGHT_ALT
-&sk LSHFT  &kp Z  &kp X  &kp C      &kp V               &kp B        &kp N            &kp M      &kp COMMA        &kp DOT  &kp FSLH          &sl 3
-                         &sk LCTRL  &mt LEFT_GUI ENTER  &lt 1 TAB    &lt 2 BACKSPACE  &kp SPACE  &sk RIGHT_SHIFT
+&sk LSHFT  &kp Z  &kp X  &kp C      &kp V               &kp B        &kp N            &kp M      &kp COMMA        &kp DOT  &kp FSLH          &sl 4
+                         &sk LCTRL  &mt LEFT_GUI ENTER  &lt 2 TAB    &lt 3 BACKSPACE  &kp SPACE  &sk RIGHT_SHIFT
+            >;
+        };
+
+        colemak {
+            bindings = <
+&kp TAB    &kp Q  &kp W  &kp F      &kp P               &kp B        &kp J            &kp L      &kp U            &kp Y    &kp SINGLE_QUOTE  &kp DELETE
+&sk LALT   &kp A  &kp R  &kp S      &kp T               &kp G        &kp M            &kp N      &kp E            &kp I    &kp O             &sk RIGHT_ALT
+&sk LSHFT  &kp Z  &kp X  &kp C      &kp D               &kp V        &kp K            &kp H      &kp COMMA        &kp DOT  &kp FSLH          &sl 4
+                         &sk LCTRL  &mt LEFT_GUI ENTER  &lt 2 TAB    &lt 3 BACKSPACE  &kp SPACE  &sk RIGHT_SHIFT
             >;
         };
 
@@ -47,7 +56,7 @@
             bindings = <
 &trans  &kp F1    &kp F2   &kp F3  &kp F4  &kp F5     &kp F6         &kp F7        &kp F8         &kp F9  &kp F10     &trans
 &trans  &kp F11   &kp F12  &trans  &trans  &trans     &bt BT_SEL 0   &bt BT_SEL 1  &bt BT_SEL 2   &trans  &bt BT_CLR  &trans
-&trans  &kp CAPS  &trans   &trans  &trans  &trans     &trans         &trans        &bt BT_DISC 2  &trans  &trans      &kp PRINTSCREEN
+&trans  &kp CAPS  &trans   &trans  &trans  &trans     &trans         &trans        &bt BT_DISC 2  &trans  &tog 1      &kp PRINTSCREEN
                            &trans  &trans  &kp TAB    &kp BACKSPACE  &trans        &trans
             >;
         };
