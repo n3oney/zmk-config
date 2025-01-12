@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'config/*'
+      - '*.nix'
+      
   workflow_dispatch:
 
 jobs:
