@@ -33,5 +33,5 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add keymap.svg
-          git commit -m "update keymap drawing"
+          git commit -m "update keymap drawing" || true
           git push origin main
