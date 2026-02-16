@@ -1,0 +1,44 @@
+diff --git a/boards/shields/nice_view_battery_peripheral/screens/peripheral.c b/boards/shields/nice_view_battery_peripheral/screens/peripheral.c
+index 2babfe75ba..729a029bc0 100644
+--- a/boards/shields/nice_view_battery_peripheral/screens/peripheral.c
++++ b/boards/shields/nice_view_battery_peripheral/screens/peripheral.c
+@@ -126,21 +126,17 @@
+ }
+ 
+ static struct battery_status_state battery_status_get_state_slot1(const zmk_event_t *eh) {
+-    const struct zmk_ssr_peripheral_battery_state_changed *battery_ev = as_zmk_ssr_peripheral_battery_state_changed(eh);
+-    if (battery_ev && battery_ev->slot == 1) {
++    const struct zmk_ssr_central_battery_state_changed *battery_ev = as_zmk_ssr_central_battery_state_changed(eh);
++    if (battery_ev) {
+         display_state.battery_slot1 = battery_ev->battery_level;
++        display_state.connected_slot1 = true;
+     }
+     
+-    const struct zmk_ssr_peripheral_usb_conn_state_changed *usb_ev = as_zmk_ssr_peripheral_usb_conn_state_changed(eh);
+-    if (usb_ev && usb_ev->slot == 1) {
++    const struct zmk_ssr_central_usb_conn_state_changed *usb_ev = as_zmk_ssr_central_usb_conn_state_changed(eh);
++    if (usb_ev) {
+         display_state.charging_slot1 = usb_ev->connected;
+     }
+-    
+-    const struct zmk_ssr_peripheral_connection_state_changed *conn_ev = as_zmk_ssr_peripheral_connection_state_changed(eh);
+-    if (conn_ev && conn_ev->slot == 1) {
+-        display_state.connected_slot1 = conn_ev->connected;
+-    }
+-    
++        
+     return (struct battery_status_state){
+         .level = display_state.battery_slot1,
+         .charging = display_state.charging_slot1,
+@@ -155,9 +151,8 @@
+ ZMK_SUBSCRIPTION(widget_battery_status_slot0, zmk_ssr_peripheral_battery_state_changed);
+ ZMK_SUBSCRIPTION(widget_battery_status_slot0, zmk_ssr_peripheral_usb_conn_state_changed);
+ ZMK_SUBSCRIPTION(widget_battery_status_slot0, zmk_ssr_peripheral_connection_state_changed);
+-ZMK_SUBSCRIPTION(widget_battery_status_slot1, zmk_ssr_peripheral_battery_state_changed);
+-ZMK_SUBSCRIPTION(widget_battery_status_slot1, zmk_ssr_peripheral_usb_conn_state_changed);
+-ZMK_SUBSCRIPTION(widget_battery_status_slot1, zmk_ssr_peripheral_connection_state_changed);
++ZMK_SUBSCRIPTION(widget_battery_status_slot1, zmk_ssr_central_battery_state_changed);
++ZMK_SUBSCRIPTION(widget_battery_status_slot1, zmk_ssr_central_usb_conn_state_changed);
+ 
+ // Layer status
+ 

@@ -1,0 +1,80 @@
+diff --git a/src/circular_scroll.c b/src/circular_scroll.c
+index 839720fbb2..1d0169c2e7 100644
+--- a/src/circular_scroll.c
++++ b/src/circular_scroll.c
+@@ -61,17 +61,24 @@
+         return -1;
+     }
+ 
+-    if (event->absolute) {
++        if (event->absolute) {
+         uint16_t current_angle = calculate_angle(event, config, data);
++        float diff = normalizeAngleDifference(current_angle, data->circular_scroll.previous_angle);
++        
+         event->raw_event_1->code = 0;
+         event->raw_event_1->type = 0;
+         event->raw_event_1->value = 0;
+ 
+-        event->raw_event_2->code = INPUT_REL_WHEEL;
+-        event->raw_event_2->type = INPUT_EV_REL;
+-        event->raw_event_2->value = normalizeAngleDifference(current_angle, data->circular_scroll.previous_angle);
+-
+-        data->circular_scroll.previous_angle = current_angle;
++        if (fabsf(diff) >= 10.0f) {
++            event->raw_event_2->code = INPUT_REL_WHEEL;
++            event->raw_event_2->type = INPUT_EV_REL;
++            event->raw_event_2->value = diff > 0 ? 1 : -1;
++            data->circular_scroll.previous_angle = current_angle;
++        } else {
++            event->raw_event_2->code = 0;
++            event->raw_event_2->type = 0;
++            event->raw_event_2->value = 0;
++        }
+     }
+ 
+     return 0;
+diff --git a/src/inertial_cursor.c b/src/inertial_cursor.c
+index 969b8cf4d4..142f172eb0 100644
+--- a/src/inertial_cursor.c
++++ b/src/inertial_cursor.c
+@@ -24,7 +24,7 @@
+     data->delta_y *= data->velocity_decay;
+ 
+     if (abs((int) data->delta_x) > 0 || abs((int) data->delta_y) > 0) {
+-        zmk_hid_mouse_movement_update((int) data->delta_y, (int) -data->delta_x);
++        zmk_hid_mouse_movement_update((int) -data->delta_x, (int) -data->delta_y);
+         zmk_endpoints_send_mouse_report();
+         k_work_reschedule(&data->inertial_work, K_MSEC(data->delta_time));
+     }
+@@ -42,7 +42,7 @@
+         data->inertial_cursor.delta_x = event->delta_x;
+     }
+ 
+-    if (event->delta_x != 0) {
++    if (event->delta_y != 0) {
+         data->inertial_cursor.delta_y = event->delta_y ;
+     }
+ 
+@@ -121,7 +121,7 @@
+         return -1;
+     }
+ 
+-    data->inertial_cursor.velocity_decay = (100.0 - config->inertial_cursor.decay_percent) / 100.0;
++    data->inertial_cursor.velocity_decay = config->inertial_cursor.decay_percent / 100.0;
+     LOG_ERR("velocity_decay *1000: %d", (int) (data->inertial_cursor.velocity_decay * 1000.0));
+ 
+     k_work_init_delayable(&data->inertial_cursor.inertial_work, inertial_cursor_work_handler);
+diff --git a/src/touch_detection.c b/src/touch_detection.c
+index 178faea652..af3dd7b7ed 100644
+--- a/src/touch_detection.c
++++ b/src/touch_detection.c
+@@ -44,6 +44,9 @@
+         // is this true? 
+         // because sometimes we might not want to forward half the events!
+         // for example when waiting during a tap or while a scroll is happening
++        if (data->circular_scroll.is_tracking) {
++            return ZMK_INPUT_PROC_STOP;
++        }
+         return ZMK_INPUT_PROC_CONTINUE;
+     }
+ 

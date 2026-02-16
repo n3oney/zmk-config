@@ -1,0 +1,89 @@
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/zmk/input_transform.h>
+#include <input/processors.dtsi>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <behaviors/input_processor_gestures.dtsi>
+#include <behaviors/input_processor_absolute_to_relative.dtsi>
+
+/ {
+    asdc0: split_data_channel {
+        compatible = "zmk,arbitrary-split-data-channel";
+        channel-id = <1>;
+        status = "okay";
+    };
+    ssr0: split_status_relay {
+        compatible = "zmk,split-status-relay";
+        asdc-channel = <&asdc0>;
+        status = "okay";
+    };
+    ssrc0: split_status_relay_consumer {
+        compatible = "zmk,split-status-relay-consumer";
+        status = "okay";
+    };
+};
+
+&pinctrl {
+    spi3_trackpad_default: spi3_trackpad_default {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 0, 20)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 8)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 17)>;
+        };
+    };
+
+    spi3_trackpad_sleep: spi3_trackpad_sleep {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK, 0, 20)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 8)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 17)>;
+            low-power-enable;
+        };
+    };
+};
+
+&spi3 {
+    compatible = "nordic,nrf-spim";
+    status = "okay";
+
+    pinctrl-0 = <&spi3_trackpad_default>;
+    pinctrl-1 = <&spi3_trackpad_sleep>;
+    pinctrl-names = "default", "sleep";
+
+    cs-gpios = <&gpio1 6 GPIO_ACTIVE_LOW>;
+
+    glidepoint: trackpad@0 {
+        compatible = "cirque,pinnacle";
+        reg = <0>;
+        spi-max-frequency = <1000000>;
+        status = "okay";
+        dr-gpios = <&gpio1 4 (GPIO_ACTIVE_HIGH)>;
+
+        sensitivity = "2x";
+        absolute-mode;
+        absolute-mode-scale-to-width=<1024>;
+        absolute-mode-scale-to-height=<1024>;
+    };
+};
+
+&zip_gestures {
+    circular-scroll;
+    circular-scroll-rim-percent=<10>;
+    circular-scroll-width=<1024>;
+    circular-scroll-height=<1024>;
+    inertial-cursor;
+    inertial-cursor-decay-percent=<80>;
+};
+
+/ {
+    trackpad_listener {
+        compatible = "zmk,input-listener";
+        device = <&glidepoint>;
+        input-processors = <
+            &zip_gestures
+            &zip_absolute_to_relative
+            &zip_xy_transform (INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)
+            &zip_xy_scaler 2 1
+            &zip_temp_layer 4 150
+        >;
+    };
+};

@@ -1,0 +1,16 @@
+/ {
+    asdc0: split_data_channel {
+        compatible = "zmk,arbitrary-split-data-channel";
+        channel-id = <1>;
+        status = "okay";
+    };
+    ssr0: split_status_relay {
+        compatible = "zmk,split-status-relay";
+        asdc-channel = <&asdc0>;
+        status = "okay";
+    };
+    ssrc0: split_status_relay_consumer {
+        compatible = "zmk,split-status-relay-consumer";
+        status = "okay";
+    };
+};
