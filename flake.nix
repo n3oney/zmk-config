@@ -56,6 +56,7 @@
           (old.preBuild or "")
           + ''
             patch -p1 -d /build/source/zmk-input-gestures < ${./patches/inertial_cursor.patch}
+            patch -p1 -d /build/source/cirque-input-module < ${./patches/cirque-input-module.patch}
           '';
       });
 

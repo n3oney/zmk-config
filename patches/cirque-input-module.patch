@@ -1,0 +1,13 @@
+diff --git a/drivers/input/input_pinnacle.c b/drivers/input/input_pinnacle.c
+index b971ef237d..d7fa392a58 100644
+--- a/drivers/input/input_pinnacle.c
++++ b/drivers/input/input_pinnacle.c
+@@ -558,7 +558,7 @@
+         LOG_DBG("Default sleep interval %d", packet[0]);
+     }
+ 
+-    ret = pinnacle_write(dev, PINNACLE_SLEEP_INTERVAL, 255);
++    ret = pinnacle_write(dev, PINNACLE_SLEEP_INTERVAL, 10);
+     if (ret <= 0) {
+         LOG_DBG("Failed to update sleep interaval %d", ret);
+     }
